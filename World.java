@@ -29,8 +29,8 @@ public class World extends JPanel {
                     = Utils.rotateImage(leafImage,
                                         randomness.nextInt(90));
                this.add(makeShell("LeafShell",
-                                  new Point(randomness.nextInt(500),
-                                            randomness.nextInt(500)),
+                                  new Point(randomness.nextInt(getWidth()),
+                                            randomness.nextInt(getHeight())),
                                   new Dimension(40, 40),
                                   rotatedImage));
           }

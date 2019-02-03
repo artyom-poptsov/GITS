@@ -23,13 +23,13 @@ public class GITS {
                                                          new Dimension(40, 40));
           AntGhost antGhost = new AntGhost(antShell);
 
-          world.add(antShell);
-
-          world.generateLeaves(5);
-
           window.setContentPane(world);
           window.setSize(500, 500);
           window.show();
+
+          world.add(antShell);
+
+          world.generateLeaves(5);
 
           while (true) {
                antGhost.run();
