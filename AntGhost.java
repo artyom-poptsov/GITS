@@ -38,18 +38,49 @@ public class AntGhost {
           return mousePosition;
      }
 
+     private int calculateDistanceToLeaf(LeafShell leaf) {
+	  return (int) Math.sqrt(Math.pow(shell.getX() - leaf.getX(), 2)
+				 + Math.pow(shell.getY() - leaf.getY(), 2));
+     }
+
+     private LeafShell searchNearestLeaf() {
+	  LeafShell nearestLeaf = null;
+	  LeafShell currentLeaf;
+	  int distance = -1;
+	  int currentDistance;
+	  ArrayList<Shell> objects = world.getObjects();
+	  synchronized(objects) {
+	       for (Shell obj : objects) {
+		    if (obj instanceof LeafShell) {
+			 currentLeaf = (LeafShell) obj;
+			 currentDistance
+			      = calculateDistanceToLeaf(currentLeaf);
+			 if (distance < 0) {
+			      distance = currentDistance;
+			      nearestLeaf = currentLeaf;
+			 } else if (currentDistance < distance) {
+			      distance = currentDistance;
+			      nearestLeaf = currentLeaf;
+			 }
+		    }
+	       }	  
+	  }
+	  return nearestLeaf;
+     }
+
      public void run() throws Exception {
           Point mousePosition = getMousePosition();
-          ArrayList<Shell> objects = world.getObjects();
           switch (state) {
           case EXPLORING:
                if (shell.contains(mousePosition)) {
                     fright = FRIGHT;
                     state = State.HIDING;
                } else if (shell.getEnergy() > ENERGY_MIN) {
-                    if (rand.nextInt(10) == 0) {
-                         deltaX = rand.nextInt(3) - 1;
-                         deltaY = rand.nextInt(3) - 1;
+                    if (rand.nextInt(15) == 0) {
+                         deltaX = (rand.nextInt(3) - 1)
+			      * shell.getX() > 0 ? 1 : -1;
+			 deltaY = (rand.nextInt(3) - 1)
+			      * shell.getY() > 0 ? 1 : -1;
                     }
                     shell.move(deltaX, deltaY);
                } else {
@@ -57,24 +88,8 @@ public class AntGhost {
                }
                break;
           case SEARCHING_FOOD:
-               synchronized(objects) {
-                    int distance = -1;
-                    for (Shell obj : objects) {
-                         if (obj instanceof LeafShell) {
-                              LeafShell leaf = (LeafShell) obj;
-                              int curDistance = (int) Math.sqrt(Math.pow(shell.getX() - leaf.getX(), 2)
-                                                                + Math.pow(shell.getY() - leaf.getY(), 2));
-                              if (distance < 0) {
-                                   distance = curDistance;
-                                   this.food = leaf;
-                              } else if (curDistance < distance) {
-                                   distance = curDistance;
-                                   this.food = leaf;
-                              }
-                         }
-                    }
-                    state = State.MOVING_TO_FOOD;
-               }
+	       this.food = searchNearestLeaf();
+	       state = State.MOVING_TO_FOOD;
                break;
           case MOVING_TO_FOOD:
                if (shell.contains(mousePosition)) {
@@ -114,10 +129,12 @@ public class AntGhost {
                          fright = 10;
                     }
                } else {
-                    int deltaX = (shell.getX() - mousePosition.x) > 0 ? 2 : -2
-                         * (rand.nextInt(3) + 1);
-                    int deltaY = (shell.getY() - mousePosition.y) > 0 ? 2 : -2
-                         * (rand.nextInt(3) + 1);
+		    if (rand.nextInt(3) == 0) {
+			 deltaX = (shell.getX() - mousePosition.x) > 0 ? 2 : -2
+			      * (rand.nextInt(3) + 1) * (shell.getX() > 0 ? 1 : -1);
+			 deltaY = (shell.getY() - mousePosition.y) > 0 ? 2 : -2
+			      * (rand.nextInt(3) + 1) * (shell.getY() > 0 ? 1 : -1);
+		    }
                     shell.move(deltaX, deltaY);
                     fright--;
                }
