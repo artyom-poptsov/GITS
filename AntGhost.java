@@ -23,12 +23,12 @@ public class AntGhost {
      private State state;
      private LeafShell food;
      private int fright;
-     private int deltaX;
-     private int deltaY;
+     private Point delta;
 
      public AntGhost(AntShell shell) {
           this.shell = shell;
-          state = State.EXPLORING;
+          this.state = State.EXPLORING;
+	  this.delta = new Point();
      }
 
      private Point getMousePosition() {
@@ -68,6 +68,36 @@ public class AntGhost {
 	  return nearestLeaf;
      }
 
+     private Point calculateRandomMove() {
+	  Point delta = new Point();
+	  delta.x = (rand.nextInt(3) - 1)
+	       * shell.getX() > 0 ? 1 : -1;
+	  delta.y = (rand.nextInt(3) - 1)
+	       * shell.getY() > 0 ? 1 : -1;
+	  return delta;
+     }
+     private Point calculateRandomMoveToFood() {
+	  Point delta = new Point();
+	  delta.x = ((((this.shell.getX() + (this.shell.getWidth() / 2))
+		       - (this.food.getX() + (this.food.getWidth() / 2))) > 0)
+		     ? -1 : 1)
+	       * (rand.nextInt(2) + 1);
+	  delta.y = ((((this.shell.getY() + (this.shell.getHeight() / 2))
+		       - (this.food.getY() + (this.food.getHeight() / 2))) > 0)
+		     ? -1 : 1)
+	       * (rand.nextInt(2) + 1);
+	  return delta;
+     }
+     private Point calculateRandomMoveForHiding(Point mousePosition) {
+	  Point delta = new Point();
+	  delta.x = (this.shell.getX() - mousePosition.x) > 0 ? 2 : -2
+	       * (rand.nextInt(3) + 1) * (this.shell.getX() > 0 ? 1 : -1);
+	  delta.y = (this.shell.getY() - mousePosition.y) > 0 ? 2 : -2
+	       * (rand.nextInt(3) + 1) * (this.shell.getY() > 0 ? 1 : -1);
+
+	  return delta;
+     }
+
      public void run() throws Exception {
           Point mousePosition = getMousePosition();
           switch (state) {
@@ -76,13 +106,10 @@ public class AntGhost {
                     fright = FRIGHT;
                     state = State.HIDING;
                } else if (shell.getEnergy() > ENERGY_MIN) {
-                    if (rand.nextInt(15) == 0) {
-                         deltaX = (rand.nextInt(3) - 1)
-			      * shell.getX() > 0 ? 1 : -1;
-			 deltaY = (rand.nextInt(3) - 1)
-			      * shell.getY() > 0 ? 1 : -1;
-                    }
-                    shell.move(deltaX, deltaY);
+		    if (rand.nextInt(15) == 0) {
+			 delta = calculateRandomMove();
+		    }
+                    shell.move(delta);
                } else {
                     state = State.SEARCHING_FOOD;
                }
@@ -98,17 +125,10 @@ public class AntGhost {
                } else if (shell.intersects(food)) {
                     this.state = State.FEEDING;
                } else {
-                    if (rand.nextInt(3) == 0) {
-                         deltaX = ((((shell.getX() + (shell.getWidth() / 2))
-                                     - (food.getX() + (food.getWidth() / 2))) > 0)
-                                   ? -1 : 1)
-                              * (rand.nextInt(2) + 1);
-                         deltaY = ((((shell.getY() + (shell.getHeight() / 2))
-                                     - (food.getY() + (food.getHeight() / 2))) > 0)
-                                   ? -1 : 1)
-                              * (rand.nextInt(2) + 1);
-                    }
-                    shell.move(deltaX, deltaY);
+		    if (rand.nextInt(3) == 0) {
+			 delta = calculateRandomMoveToFood();
+		    }
+                    shell.move(delta);
                }
                break;
           case FEEDING:
@@ -130,12 +150,9 @@ public class AntGhost {
                     }
                } else {
 		    if (rand.nextInt(3) == 0) {
-			 deltaX = (shell.getX() - mousePosition.x) > 0 ? 2 : -2
-			      * (rand.nextInt(3) + 1) * (shell.getX() > 0 ? 1 : -1);
-			 deltaY = (shell.getY() - mousePosition.y) > 0 ? 2 : -2
-			      * (rand.nextInt(3) + 1) * (shell.getY() > 0 ? 1 : -1);
+			 delta = calculateRandomMoveForHiding(mousePosition);
 		    }
-                    shell.move(deltaX, deltaY);
+                    shell.move(delta);
                     fright--;
                }
                break;

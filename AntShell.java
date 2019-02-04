@@ -30,24 +30,24 @@ public class AntShell extends Shell {
     return nearestObjects;
   }
 
-  public void move(int deltaX, int deltaY) {
-    super.x = Math.abs((super.x + deltaX) % world.getWidth());
-    super.y = Math.abs((super.y + deltaY) % world.getHeight());
+  public void move(Point delta) {
+    super.x = Math.abs((super.x + delta.x) % world.getWidth());
+    super.y = Math.abs((super.y + delta.y) % world.getHeight());
     this.energy--;
     int newAngle = -1;
-    if ((deltaX > 0) && (deltaY < 0)) {
+    if ((delta.x > 0) && (delta.y < 0)) {
       newAngle = 45;
-    }  else if ((deltaX > 0) && (deltaY == 0)) {
+    }  else if ((delta.x > 0) && (delta.y == 0)) {
       newAngle = 90;
-    }  else if ((deltaX > 0) && (deltaY > 0)) {
+    }  else if ((delta.x > 0) && (delta.y > 0)) {
       newAngle = 135;
-    }  else if ((deltaX == 0) && (deltaY > 0)) {
+    }  else if ((delta.x == 0) && (delta.y > 0)) {
       newAngle = 180;
-    }  else if ((deltaX < 0) && (deltaY > 0)) {
+    }  else if ((delta.x < 0) && (delta.y > 0)) {
       newAngle = 225;
-    }  else if ((deltaX > 0) && (deltaY == 0)) {
+    }  else if ((delta.x > 0) && (delta.y == 0)) {
       newAngle = 270;
-    }  else if ((deltaX < 0) && (deltaY < 0)) {
+    }  else if ((delta.x < 0) && (delta.y < 0)) {
       newAngle = 315;
     }
     if ((newAngle > 0) && (newAngle != this.angle)) {
