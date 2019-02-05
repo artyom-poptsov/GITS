@@ -34,23 +34,13 @@ public class AntShell extends Shell {
     super.x = Math.abs((super.x + delta.x) % world.getWidth());
     super.y = Math.abs((super.y + delta.y) % world.getHeight());
     this.energy--;
-    int newAngle = -1;
-    if ((delta.x > 0) && (delta.y < 0)) {
-      newAngle = 45;
-    }  else if ((delta.x > 0) && (delta.y == 0)) {
-      newAngle = 90;
-    }  else if ((delta.x > 0) && (delta.y > 0)) {
-      newAngle = 135;
-    }  else if ((delta.x == 0) && (delta.y > 0)) {
-      newAngle = 180;
-    }  else if ((delta.x < 0) && (delta.y > 0)) {
-      newAngle = 225;
-    }  else if ((delta.x > 0) && (delta.y == 0)) {
-      newAngle = 270;
-    }  else if ((delta.x < 0) && (delta.y < 0)) {
-      newAngle = 315;
+    int newAngle = 0;
+    try {
+	newAngle = (int) (Math.atan2(delta.y, delta.x) * (180 / Math.PI)) + 90;
+    } catch (Exception e) {
+
     }
-    if ((newAngle > 0) && (newAngle != this.angle)) {
+    if (newAngle != this.angle) {
       this.image = Utils.rotateImage(this.originalImage, newAngle);
       angle = newAngle;
     }
