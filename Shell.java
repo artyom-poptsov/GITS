@@ -3,10 +3,12 @@ import java.awt.image.*;
 
 public class Shell extends Rectangle {
      protected BufferedImage image;
-     protected int energy;
-     public Shell(Point position, Dimension dimension, BufferedImage image) {
+     private int energy;
+     public Shell(Point position, Dimension dimension, BufferedImage image,
+		  int energy) {
           super(position, dimension);
           this.image = image;
+	  this.energy = energy;
      }
      public int getEnergy() {
           return energy;

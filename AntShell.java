@@ -7,14 +7,13 @@ public class AntShell extends Shell {
   private int angle = 0;
   private BufferedImage originalImage;
   public AntShell(Point position, Dimension dimension, BufferedImage image) {
-    super(position, dimension, image);
+       super(position, dimension, image, 0x400);
     this.originalImage = image;
-    this.energy = 1000;
-    this.world = World.getInstance();;
+    this.world = World.getInstance();
   }
 
   public void eat(int deltaE) {
-    energy += deltaE;
+       super.changeEnergy(deltaE);
   }
 
   public ArrayList<Shell> getObjectsInSight() {
@@ -33,7 +32,7 @@ public class AntShell extends Shell {
   public void move(Point delta) {
     super.x = Math.abs((super.x + delta.x) % world.getWidth());
     super.y = Math.abs((super.y + delta.y) % world.getHeight());
-    this.energy--;
+    super.changeEnergy(-1);
     int newAngle = 0;
     try {
 	newAngle = (int) (Math.atan2(delta.y, delta.x) * (180 / Math.PI)) + 90;
