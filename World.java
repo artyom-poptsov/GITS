@@ -29,8 +29,10 @@ public class World extends JPanel {
                     = Utils.rotateImage(leafImage,
                                         randomness.nextInt(90));
                this.add(makeShell("LeafShell",
-                                  new Point(randomness.nextInt(getWidth()),
-                                            randomness.nextInt(getHeight())),
+                                  new Point(randomness.nextInt(getWidth()
+							       - leafImage.getWidth()),
+                                            randomness.nextInt(getHeight()
+							       - leafImage.getHeight())),
                                   new Dimension(40, 40),
                                   rotatedImage));
           }
@@ -84,11 +86,14 @@ public class World extends JPanel {
           synchronized(objects) {
                for (int idx = objects.size() - 1; idx >= 0; idx--) {
                     Shell obj = objects.get(idx);
+		    if (randomness.nextInt(3) == 0) {
+			obj.changeEnergy(randomness.nextInt(3) - 2);
+		    }
                     g.drawImage(obj.getImage(), (int) obj.getX(), (int) obj.getY(),
                                 null);
                     g.drawString("" + obj.getEnergy(),
-                                 (int) obj.getX(),
-                                 (int) obj.getY() - 5);
+                                 (int) (obj.getX() + (obj.getWidth() / 2)),
+                                 (int) (obj.getY() + (obj.getHeight() / 2)));
                }
           }
      }

@@ -11,6 +11,9 @@ public class Shell extends Rectangle {
      public int getEnergy() {
           return energy;
      }
+     public void changeEnergy(int delta) {
+	  this.energy += delta;
+     }
      public BufferedImage getImage() {
           return this.image;
      }
