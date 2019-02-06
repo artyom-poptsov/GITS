@@ -11,6 +11,7 @@ public class World extends JPanel {
 
      private ArrayList<Shell> objects = null;
      private Random randomness        = null;
+     private final static int LEAVES = 5;
 
      private World() {
           this.objects    = new ArrayList<>();
@@ -69,9 +70,6 @@ public class World extends JPanel {
      public void remove(Shell object) throws Exception {
           synchronized (objects) {
                objects.remove(object);
-               if (object instanceof LeafShell) {
-                    generateLeaves(1);
-               }
           }
      }
 
@@ -83,11 +81,20 @@ public class World extends JPanel {
 
      public void paint(Graphics g) {
           super.paint(g);
+	  int leavesCount = 0;
           synchronized(objects) {
                for (int idx = objects.size() - 1; idx >= 0; idx--) {
                     Shell obj = objects.get(idx);
+		    if (obj instanceof LeafShell) {
+			 ++leavesCount;
+		    }
 		    if (randomness.nextInt(3) == 0) {
-			obj.changeEnergy(randomness.nextInt(3) - 2);
+			 obj.changeEnergy(randomness.nextInt(3) - 2);
+		    }
+		    if (obj.getEnergy() <= 0) {
+			 objects.remove(obj);
+			 paint(g);
+			 return;
 		    }
                     g.drawImage(obj.getImage(), (int) obj.getX(), (int) obj.getY(),
                                 null);
@@ -95,6 +102,13 @@ public class World extends JPanel {
                                  (int) (obj.getX() + (obj.getWidth() / 2)),
                                  (int) (obj.getY() + (obj.getHeight() / 2)));
                }
+	       if (leavesCount < LEAVES) {
+		    try {
+			 generateLeaves(1);
+		    } catch (Exception e) {
+			 System.out.println(e);
+		    }
+	       }
           }
      }
 }
