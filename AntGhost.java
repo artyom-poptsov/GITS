@@ -100,6 +100,10 @@ public class AntGhost {
 
      public void run() throws Exception {
           Point mousePosition = getMousePosition();
+	  if (shell.getEnergy() == 0) {
+	      return;
+	  }
+
           switch (state) {
           case EXPLORING:
                if (shell.contains(mousePosition)) {
