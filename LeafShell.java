@@ -7,7 +7,12 @@ public class LeafShell extends Shell {
 	this.energy = 0xFF;
     }
     public BufferedImage getImage() {
-	return Utils.imageToBufferedImage(Utils.makeImageTransparent((Image) this.image,
-								     energy));
+	if (energy % 10 == 0) {
+	    BufferedImage transparentImage
+		= Utils.imageToBufferedImage(Utils.makeImageTransparent((Image) this.image,
+									energy));
+	    setImage(transparentImage);
+	}
+	return this.image;
     }
 }
