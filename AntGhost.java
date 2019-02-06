@@ -79,12 +79,12 @@ public class AntGhost {
      private Point calculateRandomMoveToFood() {
 	  Point delta = new Point();
 	  delta.x = ((((this.shell.getX() + (this.shell.getWidth() / 2))
-		       - (this.food.getX() + (this.food.getWidth() / 2))) > 0)
-		     ? -1 : 1)
+	  	       - (this.food.getX() + (this.food.getWidth() / 2))) > 0)
+	  	     ? -1 : 1)
 	       * (rand.nextInt(2) + 1);
 	  delta.y = ((((this.shell.getY() + (this.shell.getHeight() / 2))
-		       - (this.food.getY() + (this.food.getHeight() / 2))) > 0)
-		     ? -1 : 1)
+	  	       - (this.food.getY() + (this.food.getHeight() / 2))) > 0)
+	  	     ? -1 : 1)
 	       * (rand.nextInt(2) + 1);
 	  return delta;
      }
@@ -125,7 +125,7 @@ public class AntGhost {
                } else if (shell.intersects(food)) {
                     this.state = State.FEEDING;
                } else {
-		    if (rand.nextInt(3) == 0) {
+ 		    if (rand.nextInt(3) == 0) {
 			 delta = calculateRandomMoveToFood();
 		    }
                     shell.move(delta);
@@ -146,7 +146,7 @@ public class AntGhost {
                     if (! shell.contains(mousePosition)) {
                          this.state = State.EXPLORING;
                     } else {
-                         fright = 10;
+                         fright = FRIGHT;
                     }
                } else {
 		    if (rand.nextInt(3) == 0) {
