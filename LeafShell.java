@@ -6,10 +6,11 @@ public class LeafShell extends Shell {
 	super(position, dimension, image, 0xFF);
     }
     public BufferedImage getImage() {
-	if (this.getEnergy() % 10 == 0) {
+	int energy = this.getEnergy();
+	if ((energy % 10 == 0) && (energy > 128)) {
 	    BufferedImage transparentImage
 		= Utils.imageToBufferedImage(Utils.makeImageTransparent((Image) this.image,
-									super.getEnergy()));
+									energy));
 	    setImage(transparentImage);
 	}
 	return this.image;
