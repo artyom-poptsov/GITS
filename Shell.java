@@ -12,7 +12,9 @@ public class Shell extends Rectangle {
           return energy;
      }
      public void changeEnergy(int delta) {
-	  this.energy += delta;
+	  if (energy > 0) {
+	       this.energy += delta;
+	  }
      }
      public BufferedImage getImage() {
           return this.image;
